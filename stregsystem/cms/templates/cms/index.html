@@ -3,7 +3,7 @@
 {% block title %}Index{% endblock %}
 
 {% block content %}
-<a href="new">Ny</a>
+<a href="{% url 'new' %}">Ny</a>
 <ul>
 {% for bar in object_list %}
 <li>{{ bar.title }}</li>
