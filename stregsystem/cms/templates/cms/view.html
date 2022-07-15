@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}{{ object.title }}{% endblock %}
+{% block head %}
+<style>
+{{ object.style }}
+</style>
+<script>
+{% if object.date_start > now %}
+/* not started yet */
+{# elif ends < now #}
+/* Almost there */
+{% else %}
+/* Done */
+{% endif %}
+</script>
+{% endblock %}
+
+{% block content %}
+Starts at {{ object.date_start }}<br>
+Ends at {{ ends }}<br>
+<br>
+{% if object.date_start > now %}
+(Insert countdown)<br>
+{% else %}
+The race is on
+{% endif %}
+{{ object.title }}
+{% endblock %}
