@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Index{% endblock %}
+
+{% block content %}
+<a href="new">Ny</a>
+<ul>
+{% for bar in object_list %}
+<li>{{ bar.title }}</li>
+{% endfor %}
+</ul>
+{% endblock %}
