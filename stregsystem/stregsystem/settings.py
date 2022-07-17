@@ -1,4 +1,4 @@
-from os import getenv
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -12,7 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-oj8bf8u330!3j@5f0vn(k(9v&(3z00*)*u2plj7&hds-syv*ue'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = getenv('VIRTUAL_ENV', None).lower() is not None
+DEBUG = os.getenv('VIRTUAL_ENV', None).lower() is not None
 
 ALLOWED_HOSTS = []
 
@@ -20,14 +20,20 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # Custom apps
     'cms.apps.CmsConfig',
-    'bootstrapform',
+
+    # Django built-ins
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Extra packages
+    'bootstrapform', # Nice forms and other styling stuffs
+    'channels', # For async websocket IO
 ]
 
 MIDDLEWARE = [
@@ -59,6 +65,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'stregsystem.wsgi.application'
+ASGI_APPLICATION = 'stregsystem.asgi.application'
 
 
 # Database
@@ -111,6 +118,9 @@ STATIC_ROOT = 'public/'
 STATICFILES_DIRS = [
     "static_global",
 ]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
