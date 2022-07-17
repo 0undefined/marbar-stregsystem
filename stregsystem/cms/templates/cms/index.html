@@ -4,9 +4,25 @@
 
 {% block content %}
 <a href="{% url 'new' %}">Ny</a>
+<br>
+{% if active|length > 0 %}
+{% if active|length == 1 %}
+Aktiv marbar:
+<a href="{{ active.0.get_absolute_url }}">{{ active.0.title }}</a>&nbsp;&nbsp;&nbsp;{{ active.0.date_start|date }}
+{% else %}
+Aktive marbare:
+asd
+{% endif %}
+{% endif %}
+{% if object_list|length == 0 %}
+<div>
+No marbars!
+</div>
+{% else %}
 <ul>
 {% for bar in object_list %}
-<li>{{ bar.title }}</li>
+<li>[<a href="{% url 'edit' bar.id %}">edit</a>] <a href="{{ bar.get_absolute_url }}">{{ bar.title }}</a>&nbsp;&nbsp;&nbsp;{{ bar.date_start|date }}</li>
 {% endfor %}
 </ul>
+{% endif %}
 {% endblock %}
