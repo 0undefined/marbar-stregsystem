@@ -6,13 +6,8 @@
 <a href="{% url 'new' %}">Ny</a>
 <br>
 {% if active|length > 0 %}
-{% if active|length == 1 %}
 Aktiv marbar:
-<a href="{{ active.0.get_absolute_url }}">{{ active.0.title }}</a>&nbsp;&nbsp;&nbsp;{{ active.0.date_start|date }}
-{% else %}
-Aktive marbare:
-asd
-{% endif %}
+<a href="{{ active.0.get_absolute_url }}">{{ active.0.title }}</a>&nbsp;&nbsp;&nbsp;{{ active.0.date_start|date }} ( {{active.0.duration_h}} hours)
 {% endif %}
 {% if object_list|length == 0 %}
 <div>
@@ -21,7 +16,7 @@ No marbars!
 {% else %}
 <ul>
 {% for bar in object_list %}
-<li>[<a href="{% url 'edit' bar.id %}">edit</a>] <a href="{{ bar.get_absolute_url }}">{{ bar.title }}</a>&nbsp;&nbsp;&nbsp;{{ bar.date_start|date }}</li>
+<li>[<a href="{% url 'edit' bar.id %}">edit</a>] <a href="{{ bar.get_absolute_url }}">{{ bar.title }}</a>&nbsp;&nbsp;&nbsp;{{ bar.date_start|date }} ( {{bar.duration_h}} hours)</li>
 {% endfor %}
 </ul>
 {% endif %}

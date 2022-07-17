@@ -4,7 +4,7 @@
 {% block title %}Lav Marbar{% endblock %}
 
 {% block content %}
-<form action="" method="post">
+<form method="post" enctype="multipart/form-data">
   {% csrf_token %}
   {{ form|bootstrap }}
   <input type="submit" value="Skål!">

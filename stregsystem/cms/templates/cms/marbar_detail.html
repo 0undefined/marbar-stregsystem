@@ -3,12 +3,20 @@
 {% block title %}{{ object.title }}{% endblock %}
 {% block head %}
 <style>
+/* default styling */
+.banner {
+  margin-bottom:100px;
+  width:800px;
+}
+</style>
+<style>
+/* custom styling */
 {{ object.style }}
 </style>
 <script>
 {% if object.date_start > now %}
 /* not started yet */
-{# elif ends < now #}
+{% elif ends < now %}
 /* Almost there */
 {% else %}
 /* Done */
@@ -17,15 +25,81 @@
 {% endblock %}
 
 {% block content %}
-Starts at {{ object.date_start }}<br>
-Ends at {{ ends }}<br>
-<br>
+{% if object is None %}{# Check if there are any active marbars #}
+No current marbars!
+Go see the list of old marbars at <a href="{% url 'index' %}">index</a>
+
+{% else %}{# Actual page #}
 {% if object.date_start > now %}
 (Insert countdown)<br>
 {% elif object.date_end < now %}
 Marbar has concluded.<br>
 {% else %}
-The race is on<br>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-1">
+      <h1>1A</h1><div id="1A" class="odometer">0</div>
+      <h1>2A</h1><div id="2A" class="odometer">0</div>
+      <h1>3A</h1><div id="3A" class="odometer">0</div>
+      <h1>4A</h1><div id="4A" class="odometer">0</div>
+      <h1>5A</h1><div id="5A" class="odometer">0</div>
+      <h1>6A</h1><div id="6A" class="odometer">0</div>
+      <h1>7A</h1><div id="7A" class="odometer">0</div>
+    </div>
+
+    <div class="col-sm-1">
+      <h1>1B</h1><div id="1B" class="odometer">0</div>
+      <h1>2B</h1><div id="2B" class="odometer">0</div>
+      <h1>3B</h1><div id="3B" class="odometer">0</div>
+      <h1>4B</h1><div id="4B" class="odometer">0</div>
+      <h1>5B</h1><div id="5B" class="odometer">0</div>
+      <h1>6B</h1><div id="6B" class="odometer">0</div>
+      <h1>7B</h1><div id="7B" class="odometer">0</div>
+    </div>
+
+    <div class="col-sm-8">
+      <div class="row">
+        {% if object.banner.name %}
+        <img class="banner" src="{{ object.banner.url }}">
+        {% else %}
+        <img class="banner" src="" alt="Missing banner file">
+        {% endif %}
+      </div>
+
+      <div class="row">
+        <div class="col-sm-6 container top-buffer" id="graphSlider"></div>
+        <div class="" id="graphSlider">elfsight app shit thingy</div>
+      </div>
+
+      <div class="row top-buffer">
+        <div class="col-sm-4"><h1>Aspiranter</h1><div id="Aspiranter" class="odometer">0</div></div>
+        <div class="col-sm-4"><h1>Crew</h1><div id="Crew" class="odometer">0</div></div>
+        <div class="col-sm-4"><h1>Marbarudvalget</h1><div id="Marbarudvalget" class="odometer">0</div></div>
+      </div>
+    </div>
+
+    <div class="col-sm-1">
+      <h1>1C</h1><div id="1C" class="odometer">0</div>
+      <h1>2C</h1><div id="2C" class="odometer">0</div>
+      <h1>3C</h1><div id="3C" class="odometer">0</div>
+      <h1>4C</h1><div id="4C" class="odometer">0</div>
+      <h1>5C</h1><div id="5C" class="odometer">0</div>
+      <h1>6C</h1><div id="6C" class="odometer">0</div>
+      <h1>7C</h1><div id="7C" class="odometer">0</div>
+    </div>
+
+    <div class="col-sm-1">
+      <h1>1D</h1><div id="1D" class="odometer">0</div>
+      <h1>2D</h1><div id="2D" class="odometer">0</div>
+      <h1>3D</h1><div id="3D" class="odometer">0</div>
+      <h1>4D</h1><div id="4D" class="odometer">0</div>
+      <h1>5D</h1><div id="5D" class="odometer">0</div>
+      <h1>6D</h1><div id="6D" class="odometer">0</div>
+      <h1>7D</h1><div id="7D" class="odometer">0</div>
+    </div>
+
+  </div>
+</div>
 {% endif %}
-{{ object.title }}
+{% endif %}
 {% endblock %}
