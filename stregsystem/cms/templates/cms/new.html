@@ -1,11 +1,12 @@
 {% extends "base.html" %}
+{% load bootstrap %}
 
 {% block title %}Ny Marbar{% endblock %}
 
 {% block content %}
 <form action="" method="post">
   {% csrf_token %}
-  {{ form }}
+  {{ form|bootstrap }}
   <input type="submit" value="Skål!">
 </form>
 {% endblock %}
