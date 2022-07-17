@@ -22,8 +22,10 @@ Ends at {{ ends }}<br>
 <br>
 {% if object.date_start > now %}
 (Insert countdown)<br>
+{% elif object.date_end < now %}
+Marbar has concluded.<br>
 {% else %}
-The race is on
+The race is on<br>
 {% endif %}
 {{ object.title }}
 {% endblock %}
