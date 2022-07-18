@@ -1,0 +1,22 @@
+services:
+  redis:
+    image: redis:5
+    ports:
+      - 6379:6379
+  stregsystem:
+    build: .
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10k"
+        max-file: "1"
+    environment:
+      #- PYTHONUNBUFFERED=1
+      - DEBUG=True
+    depends_on:
+      - redis
+    ports:
+      - 8000:8000
+    volumes:
+      - ./stregsystem:/usr/share/www
+    command: python3 manage.py runserver 0.0.0.0:8000
