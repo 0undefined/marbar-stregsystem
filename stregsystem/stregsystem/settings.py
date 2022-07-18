@@ -20,9 +20,6 @@ ALLOWED_HOSTS = [] if DEBUG else ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    # Custom apps
-    'cms.apps.CmsConfig',
-
     # Django built-ins
     'django.contrib.admin',
     'django.contrib.auth',
@@ -34,6 +31,9 @@ INSTALLED_APPS = [
     # Extra packages
     'bootstrapform', # Nice forms and other styling stuffs
     'channels', # For async websocket IO
+
+    # Custom apps
+    'cms.apps.CmsConfig',
 ]
 
 MIDDLEWARE = [
