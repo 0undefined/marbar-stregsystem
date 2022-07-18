@@ -6,7 +6,11 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 
-from .models import Marbar
+import logging
+
+logger = logging.getLogger(__name__)
+
+from .models import Marbar, MarbarConsumer, MarbarCounter, get_active_marbar
 from .forms import MarbarForm
 
 # Create your views here.
@@ -27,21 +31,20 @@ class index(ListView):
 class interface(TemplateView):
     template_name = 'cms/interface.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['active'] = "fuck me its working!" # get_active_marbar()
+        return context
+
 
 class view(DetailView):
     model = Marbar
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['now'] = timezone.now()
+        context         = super().get_context_data(**kwargs)
+        context['now']  = timezone.now()
         context['ends'] = self.object.date_end
         return context
-    #form_class = MarbarForm
-    #success_url = '/index'
-    #fields = ['date_start', 'duration', 'title']
-
-    #def form_valid(self, form):
-    #    return super().form_valid(form)
 
 
 class new(CreateView):
@@ -56,6 +59,7 @@ class new(CreateView):
 
 class edit(UpdateView):
     model = Marbar
+
     # We use the list instead of '__all__' to define the order :)
     fields = ['title', 'banner', 'date_start', 'duration', 'extra_hours', 'note', 'style']
 
@@ -69,19 +73,20 @@ class interface(TemplateView):
 
 
 def view_active(request):
-    active = None
     context = {}
 
-    # Get latest marbar with date_start prior to now
-    marbars = Marbar.objects.filter(date_start__lt=timezone.now()).order_by('-date_start').first()
-
-    # Get next marbar with date_start later than now
-    upcoming_marbar = Marbar.objects.filter(date_start__gt=timezone.now()).order_by('-date_start').first()
-
-    if (marbars.date_end > timezone.now()):
-        active = marbars
-    elif (upcoming_marbar is not None):
-        active = upcoming_marbar
-
-    context['object'] = active
+    context['object'] = get_active_marbar
     return render(request, 'cms/marbar_detail.html', context)
+
+
+
+class consumer_index(ListView):
+    model = MarbarConsumer
+
+
+class consumer_new(CreateView):
+    model = MarbarConsumer
+    fields = ['name']
+
+    #def form_valid(self, form):
+    #    return super().form_valid(form)
