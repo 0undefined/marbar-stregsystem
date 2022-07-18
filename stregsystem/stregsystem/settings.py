@@ -12,9 +12,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-oj8bf8u330!3j@5f0vn(k(9v&(3z00*)*u2plj7&hds-syv*ue'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('VIRTUAL_ENV', None).lower() is not None
+DEBUG = os.getenv('VIRTUAL_ENV', None) is not None or os.getenv('DEBUG', "false").lower() == "true"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [] if DEBUG else ['*']
 
 
 # Application definition
@@ -66,6 +66,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'stregsystem.wsgi.application'
 ASGI_APPLICATION = 'stregsystem.asgi.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            # We use `redis` here since using ip's in containers is a no-no
+            'hosts': [('redis', 6379)],
+        }
+    }
+}
 
 
 # Database
@@ -114,9 +123,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = 'public/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'public')
 STATICFILES_DIRS = [
-    "static_global",
+    os.path.join(BASE_DIR, 'static_global'),
 ]
 
 MEDIA_URL = '/media/'
