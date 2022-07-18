@@ -7,6 +7,7 @@
 .banner {
   margin-bottom:100px;
   width:800px;
+  max-width:400px;
 }
 </style>
 <style>
@@ -15,11 +16,47 @@
 </style>
 <script>
 {% if object.date_start > now %}
-/* not started yet */
-{% elif ends < now %}
-/* Almost there */
-{% else %}
 /* Done */
+{% elif ends < now %}
+alert("marbar has concluded");
+/* not started yet */
+
+
+{% else %}
+/* ongoing */
+
+const update_url = 'update/6'; /* TODO fix this bs later */
+
+const update_socket = new WebSocket('ws://' + window.location.host + '/update/6');
+
+function update(consumer, streger) {
+	var elem = document.getElementById(consumer);
+	var count = parseInt(elem.textContent);
+	if (isNaN(count)) { /* we fucked up somewhere, refresh */ }
+
+	elem.textContent = count + streger;
+}
+
+update_socket.onmessage = function(e) {
+	const message = JSON.parse(e.data);
+
+    console.log("received message of type " + message.type);
+
+	if (message.type === "update") {
+		/* Update a single counter */
+		update(message.consumer, message.count);
+
+	} else if (message.type === "update_all") {
+        console.log(message.streger);
+        for (var i = 0; i < message.streger.length; i++) {
+            update(message.streger[i].consumer, message.streger[i].count);
+        }
+		/* TODO: update all parts */;
+	} else if (message.type === "refresh") {
+		location.reload();
+	}
+};
+
 {% endif %}
 </script>
 {% endblock %}
