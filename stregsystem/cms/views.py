@@ -1,5 +1,4 @@
 from django.http import JsonResponse
-from django.shortcuts import render
 from django.utils import timezone
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
@@ -40,6 +39,14 @@ class interface(TemplateView):
 class view(DetailView):
     model = Marbar
 
+    get_active = False
+
+    def get_object(self, queryset=None):
+        if self.get_active:
+            return get_active_marbar()
+        else:
+            return super(view, self).get_object(queryset=queryset)
+
     def get_context_data(self, **kwargs):
         context         = super().get_context_data(**kwargs)
         context['now']  = timezone.now()
@@ -72,14 +79,6 @@ class interface(TemplateView):
     template_name = 'cms/interface.html'
 
 
-def view_active(request):
-    context = {}
-
-    context['object'] = get_active_marbar
-    return render(request, 'cms/marbar_detail.html', context)
-
-
-
 class consumer_index(ListView):
     model = MarbarConsumer
 
@@ -87,6 +86,3 @@ class consumer_index(ListView):
 class consumer_new(CreateView):
     model = MarbarConsumer
     fields = ['name']
-
-    #def form_valid(self, form):
-    #    return super().form_valid(form)
