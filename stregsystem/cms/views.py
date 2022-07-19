@@ -80,6 +80,11 @@ def add_drinks(request):
 class interface(TemplateView):
     template_name = 'cms/interface.html'
 
+    def get_context_data(self, **kwargs):
+        context           = super().get_context_data(**kwargs)
+        context['marbar'] = get_active_marbar()
+        return context
+
 
 class consumer_index(ListView):
     model = MarbarConsumer
