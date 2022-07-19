@@ -14,7 +14,10 @@ def get_active_marbar():
     # Get next marbar with date_start later than now
     upcoming_marbar = Marbar.objects.filter(date_start__gt=timezone.now()).order_by('-date_start').first()
 
-    if (marbars.date_end > timezone.now()):
+    # Give a 12 hour post-marbar buffer zone to get the glory
+    dt = timedelta(hours=12)
+
+    if (marbars is not None and marbars.date_end + dt > timezone.now()):
         active = marbars
     elif (upcoming_marbar is not None):
         active = upcoming_marbar
@@ -26,11 +29,13 @@ def get_active_marbar():
 class Marbar(models.Model):
     title       = models.CharField(max_length=512, default='')
     date_start  = models.DateTimeField('Starting date')
-    duration    = models.DurationField(default=timedelta(days=3))
+    duration    = models.DurationField(default=timedelta(hours=100))
     extra_hours = models.DurationField(default=timedelta())
     note        = models.TextField(default='', blank=True)
     style       = models.TextField(default='', blank=True)
     banner      = models.ImageField(null=True, blank=True, upload_to='banners')
+
+    elfsight_apikey = models.CharField(max_length=128, null=True, blank=True)
 
     def get_absolute_url(self):
         return reverse('view', kwargs={'pk': self.id})
