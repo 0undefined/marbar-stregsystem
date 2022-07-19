@@ -69,7 +69,8 @@ class edit(UpdateView):
     model = Marbar
 
     # We use the list instead of '__all__' to define the order :)
-    fields = ['title', 'banner', 'date_start', 'duration', 'extra_hours', 'note', 'style']
+    fields = ['title', 'banner', 'date_start', 'duration', 'extra_hours',
+              'note', 'style', 'elfsight_apikey']
 
 
 def add_drinks(request):
