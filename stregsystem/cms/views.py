@@ -50,7 +50,8 @@ class view(DetailView):
     def get_context_data(self, **kwargs):
         context         = super().get_context_data(**kwargs)
         context['now']  = timezone.now()
-        context['ends'] = self.object.date_end
+        if (self.object is not None):
+            context['ends'] = self.object.date_end
         return context
 
 
