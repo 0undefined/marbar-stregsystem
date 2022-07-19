@@ -5,6 +5,7 @@
 
 {% block content %}
 <div class="container">
+<h1>Ny marbar</h1>
 <form method="post" enctype="multipart/form-data">
   {% csrf_token %}
   {{ form|bootstrap }}

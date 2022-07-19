@@ -4,8 +4,8 @@
 {% block title %}Ny marbar deltager{% endblock %}
 
 {% block content %}
-<h1>Ny marbar deltager</h1>
 <div class="container">
+<h1>Ny marbar deltager</h1>
 <form method="post" enctype="multipart/form-data">
   {% csrf_token %}
   {{ form|bootstrap }}

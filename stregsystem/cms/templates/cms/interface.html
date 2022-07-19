@@ -24,7 +24,7 @@
 }
 </style>
 <script>
-const update_url = '/update/6'; {# TODO fix this bs later using `url` #}
+const update_url = '/update/{{ marbar.id }}'; {# TODO fix this bs later using `url` #}
 
 const update_socket = new WebSocket('ws://' + window.location.host + update_url);
 

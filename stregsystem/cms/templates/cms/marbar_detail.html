@@ -5,29 +5,79 @@
 <style>
 /* default styling */
 .banner {
-  margin-bottom:100px;
+  margin-bottom:12pt;
   width:800px;
-  max-width:400px;
+  max-width:70vh;
+}
+#countdown {
+{% if object.date_start > now %}
+  font-size: 4pc;
+{% else %}
+  font-size: 14pt;
+{% endif %}
 }
 </style>
 <style>
 /* custom styling */
 {{ object.style }}
 </style>
+{% if object.date_end > now %}
 <script>
+window.addEventListener("load", (event) => {
+    {# countdown to start, otherwise count down to end #}
 {% if object.date_start > now %}
-/* Done */
-{% elif ends < now %}
-alert("marbar has concluded");
-/* not started yet */
-
-
+	const countdown_date = '{{ object.date_start|date:"Y-m-d H:i" }}';
 {% else %}
+	const countdown_date = '{{ object.date_end|date:"Y-m-d H:i" }}';
+{% endif %}
+
+	var countdown_to = new Date(countdown_date).getTime();
+	const countdown_elem = document.getElementById('countdown');
+
+	var timer = setInterval(() => {
+		var now = new Date().getTime();
+		var diff = countdown_to - now;
+
+		if (diff < 0) {
+	{% if object.date_start > now %}
+			location.reload();
+	{% else %}
+			countdown_elem.textContent = "00:00:00";
+			if (countdown_elem.style.color != "black") { countdown_elem.style.color = "black"; }
+			else { countdown_elem.style.color = "white"; }
+            return;
+	{% endif %}
+		}
+
+		var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+		var hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+		/* Vi gider ikke se dage hvis der er mindre end 3 tilbage */
+		if (days > 3) {
+
+			countdown_elem.textContent = `${days} dage og ${hours} timer!`;
+
+			/* Analogt til sidste kommentar, gider vi ikke se sekunder hvis der er lang
+			   tid tilbage */
+		} else {
+			hours = (hours + days * 24).toString().padStart(2,'0');
+			var minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2,'0');
+			var seconds = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2,'0');
+
+			countdown_elem.textContent = `${hours}:${minutes}:${seconds}`;
+		}
+
+	}, 1000 /* 1sec interval between updates */);
+});
+
+{% if object.date_start < now %}
 /* ongoing */
 
-const update_url = 'update/6'; /* TODO fix this bs later */
+const update_url = "/update/{{ object.id }}"; /* TODO fix this bs later */
+/* Ideally we want to use `url 'endpoint'` or something like this
+ * instead of hardcoding 'update' in there */
 
-const update_socket = new WebSocket('ws://' + window.location.host + '/update/6');
+const update_socket = new WebSocket('ws://' + window.location.host + update_url);
 
 function update(consumer, streger) {
 	var elem = document.getElementById(consumer);
@@ -59,6 +109,7 @@ update_socket.onmessage = function(e) {
 
 {% endif %}
 </script>
+{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -68,9 +119,16 @@ Go see the list of old marbars at <a href="{% url 'index' %}">index</a>
 
 {% else %}{# Actual page #}
 {% if object.date_start > now %}
-(Insert countdown)<br>
+<div class="container w-100 h-100">
+  <h1 class="text-center align-middle" style="margin-top:20vh">Marbar starter om</h1>
+  <div id="countdown" class="text-center"> (Insert countdown) </div>
+  <h3 class="text-center">{{ object.title }}</h3>
+</div>
+
 {% elif object.date_end < now %}
-Marbar has concluded.<br>
+<div class="container w-100 h-100">
+  <h1 class="text-center align-middle" style="margin-top:20vh">Marbar has concluded.</h1>
+</div>
 {% else %}
 <div class="container-fluid">
   <div class="row">
@@ -99,13 +157,17 @@ Marbar has concluded.<br>
         {% if object.banner.name %}
         <img class="banner" src="{{ object.banner.url }}">
         {% else %}
-        <img class="banner" src="" alt="Missing banner file">
+        <img class="banner" src="/kekw.png" alt="Missing banner file">
         {% endif %}
       </div>
 
+      <div class="row"><div id="countdown" class="text-center">(Insert countdown)</div></div>
+
       <div class="row">
         <div class="col-sm-6 container top-buffer" id="graphSlider"></div>
-        <div class="" id="graphSlider">elfsight app shit thingy</div>
+        {% if object.elfsight_apikey %}
+        <div class="elfsight-app-{{ object.elfsight_apikey }}"></div>
+        {% endif %}
       </div>
 
       <div class="row top-buffer">
