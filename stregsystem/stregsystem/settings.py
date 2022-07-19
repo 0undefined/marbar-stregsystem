@@ -66,12 +66,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'stregsystem.wsgi.application'
 ASGI_APPLICATION = 'stregsystem.asgi.application'
+
+REDIS_HOST = os.getenv('REDIS_HOST', 'redis')
+REDIS_PORT = os.getenv('REDIS_PORT', 6379)
+
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
             # We use `redis` here since using ip's in containers is a no-no
-            'hosts': [('redis', 6379)],
+            'hosts': [(REDIS_HOST, REDIS_PORT)],
         }
     }
 }
@@ -79,13 +83,22 @@ CHANNEL_LAYERS = {
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
+DATABASES = {}
 
-DATABASES = {
-    'default': {
+if os.getenv('DB_TYPE', None) is None:
+    DATABASES['default'] = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
-}
+else:
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.' + os.getenv('DB_TYPE', 'sqlite3'),
+        'NAME': 'stregsystem',
+        'USER': os.getenv('DB_USER', 'marbar'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
+    }
 
 
 # Password validation
