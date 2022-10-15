@@ -53,8 +53,10 @@ class Marbar(models.Model):
 
 
 # Køkkener/aspiranter/crew etc.
+# Bliver automatisk lavet når systemet starter i ./apps.py ud fra listen
+# stregsystem.settings.DEFAULT_CONSUMERS
 class MarbarConsumer(models.Model):
-    name    = models.CharField(max_length=64, unique=True, blank=False)
+    name = models.CharField(max_length=64, unique=True, blank=False)
 
 
 # aka. Streger
