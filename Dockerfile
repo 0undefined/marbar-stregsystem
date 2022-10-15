@@ -1,10 +1,9 @@
 FROM alpine:3.16.0
 
-WORKDIR /usr/share/www
 
 ENV PYTHONUNBUFFERED=1
 ENV DEBUG=False
-ENV DB_TYPE=MYSQL
+ENV DB_TYPE=mysql
 ENV DB_HOST=atlas_db
 ENV DB_USER=marbar
 ENV DB_PASSWORD=
@@ -24,8 +23,12 @@ RUN pip3 install -q --no-cache-dir    \
     mysqlclient                       \
     tzdata
 
-#RUN python3 manage.py collectstatic
-#VOLUME ["stregsystem"]
+ADD ./stregsystem/ /usr/share/www/
+WORKDIR /usr/share/www
 
+COPY ./runserver.sh /usr/bin
+RUN [ "chmod", "+x", "/usr/bin/runserver.sh" ]
 
 EXPOSE 8000:8000
+
+ENTRYPOINT [ "runserver.sh" ]
