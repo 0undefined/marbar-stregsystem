@@ -2,6 +2,7 @@
 
 {% block title %}{{ object.title }}{% endblock %}
 {% block head %}
+<script src="static/odometer/odometer.js"></script>
 <style>
 /* default styling */
 .banner {
@@ -16,6 +17,23 @@
   font-size: 14pt;
 {% endif %}
 }
+.odometer { font-size: 18pt; }
+.points { text-align: center; }
+.carousel-inner > .item > img,
+.carousel-inner > .item > a > img { width: 70%; margin: auto; }
+.carousel-fade .carousel-inner .item {
+  opacity: 0;
+  transition-property: opacity;
+  transition-duration: 1s;
+  transition-timing-function: linear;
+}
+.carousel-fade .carousel-inner .active { opacity: 1; }
+.carousel-fade .carousel-inner .active.left,
+.carousel-fade .carousel-inner .active.right { left: 0; opacity: 0; z-index: 1; }
+.carousel-fade .carousel-inner .next.left,
+.carousel-fade .carousel-inner .prev.right { opacity: 1; }
+.carousel-fade .carousel-control { z-index: 2; }
+.top-buffer { margin-top: 0px; }
 </style>
 <style>
 /* custom styling */
