@@ -2,7 +2,8 @@
 
 {% block title %}{{ object.title }}{% endblock %}
 {% block head %}
-<script src="static/odometer/odometer.js"></script>
+<link rel="stylesheet" href="/static/odometer/themes/odometer-theme-minimal.css" />
+<script src="/static/odometer/odometer.js"></script>
 <style>
 /* default styling */
 .banner {
@@ -24,7 +25,7 @@
 .carousel-fade .carousel-inner .item {
   opacity: 0;
   transition-property: opacity;
-  transition-duration: 1s;
+  transition-duration: 5s;
   transition-timing-function: linear;
 }
 .carousel-fade .carousel-inner .active { opacity: 1; }
@@ -41,6 +42,11 @@
 </style>
 {% if object.date_end > now %}
 <script>
+window.odometerOptions = {
+	format: 'd',
+	animation: 'count',
+};
+
 window.addEventListener("load", (event) => {
     {# countdown to start, otherwise count down to end #}
 {% if object.date_start > now %}
@@ -97,10 +103,20 @@ const update_url = "/update/{{ object.id }}"; /* TODO fix this bs later */
 
 const update_socket = new WebSocket('ws://' + window.location.host + update_url);
 
-function update(consumer, streger) {
+function odometerNumberParser(e) {
+	var numbers = e.getElementsByClassName("odometer-value");
+	if (numbers.lenght == 0) return "err";
+	var sum = 0;
+	for (var i = 0; i < numbers.length; i++) {
+		sum = sum + 10**(numbers.length - i - 1) * parseInt(numbers[i].textContent);
+	}
+	return sum;
+}
+
+function updateLocalCounter(consumer, streger) {
 	var elem = document.getElementById(consumer);
-	var count = parseInt(elem.textContent);
-	if (isNaN(count)) { /* we fucked up somewhere, refresh */ }
+	var count = odometerNumberParser(elem);
+	if (isNaN(count)) { /* we fucked up somewhere, TODO: refresh */ }
 
 	elem.textContent = count + streger;
 }
@@ -108,17 +124,14 @@ function update(consumer, streger) {
 update_socket.onmessage = function(e) {
 	const message = JSON.parse(e.data);
 
-    console.log("received message of type " + message.type);
-
 	if (message.type === "update") {
 		/* Update a single counter */
-		update(message.consumer, message.count);
+		updateLocalCounter(message.consumer, message.count);
 
 	} else if (message.type === "update_all") {
-        console.log(message.streger);
-        for (var i = 0; i < message.streger.length; i++) {
-            update(message.streger[i].consumer, message.streger[i].count);
-        }
+		for (var i = 0; i < message.streger.length; i++) {
+			updateLocalCounter(message.streger[i].consumer, message.streger[i].count);
+		}
 		/* TODO: update all parts */;
 	} else if (message.type === "refresh") {
 		location.reload();
@@ -175,7 +188,7 @@ Go see the list of old marbars at <a href="{% url 'index' %}">index</a>
         {% if object.banner.name %}
         <img class="banner" src="{{ object.banner.url }}">
         {% else %}
-        <img class="banner" src="/kekw.png" alt="Missing banner file">
+        <img class="banner" src="/static/kekw.png" alt="Missing banner file">
         {% endif %}
       </div>
 
@@ -185,6 +198,7 @@ Go see the list of old marbars at <a href="{% url 'index' %}">index</a>
         <div class="col-sm-6 container top-buffer" id="graphSlider"></div>
         {% if object.elfsight_apikey %}
         <div class="elfsight-app-{{ object.elfsight_apikey }}"></div>
+        {% else %}
         {% endif %}
       </div>
 
