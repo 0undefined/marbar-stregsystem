@@ -15,8 +15,8 @@ RUN apk update
 RUN apk add build-base python3 python3-dev py3-pip bash py3-mysqlclient
 RUN pip3 install -q --no-cache-dir    \
     Pillow                            \
-    channels                          \
-    channels_redis                    \
+    channels==3.0.5                   \
+    channels-redis==3.4.1             \
     django                            \
     django-bootstrap-form             \
     ipython                           \
