@@ -51,3 +51,5 @@ _er `pull` strengt talt nødvendigt?_
   + Eller: Vis top 5 Consumers på forsiden
 * Dokumenter hvordan det virker
 * Automatiser deployment
+
+For flere ting at fixe, `grep -rn TODO --exclude-dir=static_global`
