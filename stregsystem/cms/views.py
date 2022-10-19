@@ -32,7 +32,7 @@ class interface(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['active'] = "fuck me its working!" # get_active_marbar()
+        context['active'] = get_active_marbar()
         return context
 
 
