@@ -2,7 +2,7 @@
 
 {% block title %}{{ object.title }}{% endblock %}
 {% block head %}
-<link rel="stylesheet" href="/static/odometer/themes/odometer-theme-minimal.css" />
+<link rel="stylesheet" href="/static/odometer/themes/odometer-theme-car.css" />
 <script src="/static/odometer/odometer.js"></script>
 <style>
 /* default styling */
@@ -35,6 +35,51 @@
 .carousel-fade .carousel-inner .prev.right { opacity: 1; }
 .carousel-fade .carousel-control { z-index: 2; }
 .top-buffer { margin-top: 0px; }
+
+.container {
+  display:flex;
+  flex-direction:row;
+}
+.col {
+  display:flex;
+  flex-grow:1;
+  flex-direction:column;
+  height: calc(100vh - 1pc);
+}
+.mid {
+  display:flex;
+  flex-grow:4;
+  flex-direction:column;
+  height: calc(100vh - 1pc);
+}
+.champs {
+  display:flex;
+  flex-grow:1/7;
+  flex-direction:row;
+  justify-content: center;
+}
+.kitchen {
+  display:flex;
+  flex:1;
+  flex-direction:column;
+  justify-content: center;
+}
+.mid > .row:first-child {
+  display: flex;
+  flex:5.9;
+  justify-content: center;
+}
+.mid > .row > .banner {
+  align-self: flex-start;
+}
+.mid > .row:nth-child(2) {
+  display: flex;
+  flex:0.1;
+  justify-content: center;
+}
+.mid > .champs {
+  flex:1;
+}
 </style>
 <style>
 /* custom styling */
@@ -48,7 +93,7 @@ window.odometerOptions = {
 };
 
 window.addEventListener("load", (event) => {
-    {# countdown to start, otherwise count down to end #}
+	{# countdown to start, otherwise count down to end #}
 {% if object.date_start > now %}
 	const countdown_date = '{{ object.date_start|date:"Y-m-d H:i" }}';
 {% else %}
@@ -69,7 +114,7 @@ window.addEventListener("load", (event) => {
 			countdown_elem.textContent = "00:00:00";
 			if (countdown_elem.style.color != "black") { countdown_elem.style.color = "black"; }
 			else { countdown_elem.style.color = "white"; }
-            return;
+			return;
 	{% endif %}
 		}
 
@@ -161,74 +206,71 @@ Go see the list of old marbars at <a href="{% url 'index' %}">index</a>
   <h1 class="text-center align-middle" style="margin-top:20vh">Marbar has concluded.</h1>
 </div>
 {% else %}
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-sm-1">
-      <h1>1A</h1><div id="1A" class="odometer">0</div>
-      <h1>2A</h1><div id="2A" class="odometer">0</div>
-      <h1>3A</h1><div id="3A" class="odometer">0</div>
-      <h1>4A</h1><div id="4A" class="odometer">0</div>
-      <h1>5A</h1><div id="5A" class="odometer">0</div>
-      <h1>6A</h1><div id="6A" class="odometer">0</div>
-      <h1>7A</h1><div id="7A" class="odometer">0</div>
+<div class="container">
+  <div class="col">
+    <div class="kitchen"><h1>1A</h1><div id="1A" class="odometer">0</div></div>
+    <div class="kitchen"><h1>2A</h1><div id="2A" class="odometer">0</div></div>
+    <div class="kitchen"><h1>3A</h1><div id="3A" class="odometer">0</div></div>
+    <div class="kitchen"><h1>4A</h1><div id="4A" class="odometer">0</div></div>
+    <div class="kitchen"><h1>5A</h1><div id="5A" class="odometer">0</div></div>
+    <div class="kitchen"><h1>6A</h1><div id="6A" class="odometer">0</div></div>
+    <div class="kitchen"><h1>7A</h1><div id="7A" class="odometer">0</div></div>
+  </div>
+
+  <div class="col">
+    <div class="kitchen"><h1>1B</h1><div id="1B" class="odometer">0</div></div>
+    <div class="kitchen"><h1>2B</h1><div id="2B" class="odometer">0</div></div>
+    <div class="kitchen"><h1>3B</h1><div id="3B" class="odometer">0</div></div>
+    <div class="kitchen"><h1>4B</h1><div id="4B" class="odometer">0</div></div>
+    <div class="kitchen"><h1>5B</h1><div id="5B" class="odometer">0</div></div>
+    <div class="kitchen"><h1>6B</h1><div id="6B" class="odometer">0</div></div>
+    <div class="kitchen"><h1>7B</h1><div id="7B" class="odometer">0</div></div>
+  </div>
+
+  <div class="mid">
+    <div class="row">
+      {% if object.banner.name %}
+      <img class="banner" src="{{ object.banner.url }}">
+      {% else %}
+      <img class="banner" src="/static/kekw.png" alt="Missing banner file">
+      {% endif %}
     </div>
 
-    <div class="col-sm-1">
-      <h1>1B</h1><div id="1B" class="odometer">0</div>
-      <h1>2B</h1><div id="2B" class="odometer">0</div>
-      <h1>3B</h1><div id="3B" class="odometer">0</div>
-      <h1>4B</h1><div id="4B" class="odometer">0</div>
-      <h1>5B</h1><div id="5B" class="odometer">0</div>
-      <h1>6B</h1><div id="6B" class="odometer">0</div>
-      <h1>7B</h1><div id="7B" class="odometer">0</div>
+    <div class="row"><div id="countdown" class="text-center">(Insert countdown)</div></div>
+
+    <div class="row">
+      <div class="col-sm-6 container top-buffer" id="graphSlider"></div>
+      {% if object.elfsight_apikey %}
+      <div class="elfsight-app-{{ object.elfsight_apikey }}"></div>
+      {% else %}
+      {% endif %}
     </div>
 
-    <div class="col-sm-8">
-      <div class="row">
-        {% if object.banner.name %}
-        <img class="banner" src="{{ object.banner.url }}">
-        {% else %}
-        <img class="banner" src="/static/kekw.png" alt="Missing banner file">
-        {% endif %}
-      </div>
-
-      <div class="row"><div id="countdown" class="text-center">(Insert countdown)</div></div>
-
-      <div class="row">
-        <div class="col-sm-6 container top-buffer" id="graphSlider"></div>
-        {% if object.elfsight_apikey %}
-        <div class="elfsight-app-{{ object.elfsight_apikey }}"></div>
-        {% else %}
-        {% endif %}
-      </div>
-
-      <div class="row top-buffer">
-        <div class="col-sm-4"><h1>Aspiranter</h1><div id="Aspiranter" class="odometer">0</div></div>
-        <div class="col-sm-4"><h1>Crew</h1><div id="Crew" class="odometer">0</div></div>
-        <div class="col-sm-4"><h1>Marbarudvalget</h1><div id="Marbarudvalget" class="odometer">0</div></div>
-      </div>
+    <div class="champs">
+      <div class="kitchen"><h1>Aspiranter</h1><div id="Aspiranter" class="odometer">0</div></div>
+      <div class="kitchen"><h1>Crew</h1><div id="Crew" class="odometer">0</div></div>
+      <div class="kitchen"><h1>Marbarudvalget</h1><div id="Marbarudvalget" class="odometer">0</div></div>
     </div>
+  </div>
 
-    <div class="col-sm-1">
-      <h1>1C</h1><div id="1C" class="odometer">0</div>
-      <h1>2C</h1><div id="2C" class="odometer">0</div>
-      <h1>3C</h1><div id="3C" class="odometer">0</div>
-      <h1>4C</h1><div id="4C" class="odometer">0</div>
-      <h1>5C</h1><div id="5C" class="odometer">0</div>
-      <h1>6C</h1><div id="6C" class="odometer">0</div>
-      <h1>7C</h1><div id="7C" class="odometer">0</div>
-    </div>
+  <div class="col">
+    <div class="kitchen"><h1>1C</h1><div id="1C" class="odometer">0</div></div>
+    <div class="kitchen"><h1>2C</h1><div id="2C" class="odometer">0</div></div>
+    <div class="kitchen"><h1>3C</h1><div id="3C" class="odometer">0</div></div>
+    <div class="kitchen"><h1>4C</h1><div id="4C" class="odometer">0</div></div>
+    <div class="kitchen"><h1>5C</h1><div id="5C" class="odometer">0</div></div>
+    <div class="kitchen"><h1>6C</h1><div id="6C" class="odometer">0</div></div>
+    <div class="kitchen"><h1>7C</h1><div id="7C" class="odometer">0</div></div>
+  </div>
 
-    <div class="col-sm-1">
-      <h1>1D</h1><div id="1D" class="odometer">0</div>
-      <h1>2D</h1><div id="2D" class="odometer">0</div>
-      <h1>3D</h1><div id="3D" class="odometer">0</div>
-      <h1>4D</h1><div id="4D" class="odometer">0</div>
-      <h1>5D</h1><div id="5D" class="odometer">0</div>
-      <h1>6D</h1><div id="6D" class="odometer">0</div>
-      <h1>7D</h1><div id="7D" class="odometer">0</div>
-    </div>
-
+  <div class="col">
+    <div class="kitchen"><h1>1D</h1><div id="1D" class="odometer">0</div></div>
+    <div class="kitchen"><h1>2D</h1><div id="2D" class="odometer">0</div></div>
+    <div class="kitchen"><h1>3D</h1><div id="3D" class="odometer">0</div></div>
+    <div class="kitchen"><h1>4D</h1><div id="4D" class="odometer">0</div></div>
+    <div class="kitchen"><h1>5D</h1><div id="5D" class="odometer">0</div></div>
+    <div class="kitchen"><h1>6D</h1><div id="6D" class="odometer">0</div></div>
+    <div class="kitchen"><h1>7D</h1><div id="7D" class="odometer">0</div></div>
   </div>
 </div>
 {% endif %}

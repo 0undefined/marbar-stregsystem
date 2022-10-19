@@ -4,23 +4,62 @@
 {% block title %}Interface{% endblock %}
 
 {% block head %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}">
 <style>
-.top-buffer { margin-top:40px; }
-.btn-block { height: 70px; margin: 10px; }
-.form-control{ margin: 10px; height: 70px; }
+body {margin:3pt;padding:0;margin:0;}
+input{margin:3pt;padding:1pc;}
 #status_response {
 	position: fixed;
 	background-color: black;
 	color: white;
-	width: 10pc;
-	padding: 1pc;
-	margin-left: calc(50vw - 5pc);
+	max-width: 10pc;
+	/*margin-left: calc(50vw - 5pc);*/
 	font-size: 14pt;
 	margin-top: calc(45vh - 3pc);
 	border-radius: 3pt;
 	text-align: center;
 	display: none;
+}
+
+.layoutcontainer {
+  display:flex;
+  flex-direction:column;
+  height:100vh;
+  /*flex-basis: 100%;*/
+}
+#streger {
+  display:flex;
+  flex:1;
+}
+.kitchencontainer {
+  display:flex;
+  flex:7;
+  flex-direction:column;
+}
+.champcontainer {
+  flex:2;
+  display:flex;
+  flex-wrap: wrap;
+}
+.col_kitchens {
+  display:flex;
+  flex-wrap: wrap;
+  flex-direction:row;
+  flex:1;
+}
+
+.champcontainer input,
+.col_kitchens input {
+  flex:1;
+}
+
+@media (orientation: portrait) {
+  .kitchencontainer {
+    flex-direction:row;
+    flex:9;
+  }
+  .col_kitchens {
+    flex-direction:column;
+  }
 }
 </style>
 <script>
@@ -41,7 +80,7 @@ function Notify(msg) {
 
 update_socket.onmessage = function(e) {
 	const response = JSON.parse(e.data);
-    console.log(response);
+	console.log(response);
 	if (response.type !== "response") { return; }
 
 	Notify(response.message);
@@ -58,7 +97,7 @@ update_socket.onmessage = function(e) {
 /* Add button handling */
 window.addEventListener("load", (event) => {
 	const kbtns = document.getElementsByClassName('kbutton');
-            console.log("Adding button click events");
+	console.log("Adding button click events");
 
 	for (var i = 0; i < kbtns.length; i++) {
 		kbtns[i].addEventListener('click', (e) => {
@@ -82,63 +121,50 @@ window.addEventListener("load", (event) => {
 {% block content %}
 <div id="status_response"></div>
 <form action="/update" method="post">
-<div class=container-fluid">
-  <div class="row">
-    <div class=col-sm-4>
-      <div class="form-group">
-        <input type="number" class="form-control" id="streger" name="streger" placeholder="streger">
-      </div>
+<div class="layoutcontainer">
+  <input type="number" id="streger" name="streger" placeholder="streger">
+  <div class="kitchencontainer">
+    <div class="col_kitchens">
+      <input class="kbutton" type="button" value="1A">
+      <input class="kbutton" type="button" value="2A">
+      <input class="kbutton" type="button" value="3A">
+      <input class="kbutton" type="button" value="4A">
+      <input class="kbutton" type="button" value="5A">
+      <input class="kbutton" type="button" value="6A">
+      <input class="kbutton" type="button" value="7A">
+    </div>
+    <div class="col_kitchens">
+      <input class="kbutton" type="button" value="1B">
+      <input class="kbutton" type="button" value="2B">
+      <input class="kbutton" type="button" value="3B">
+      <input class="kbutton" type="button" value="4B">
+      <input class="kbutton" type="button" value="5B">
+      <input class="kbutton" type="button" value="6B">
+      <input class="kbutton" type="button" value="7B">
+    </div>
+    <div class="col_kitchens">
+      <input class="kbutton" type="button" value="1C">
+      <input class="kbutton" type="button" value="2C">
+      <input class="kbutton" type="button" value="3C">
+      <input class="kbutton" type="button" value="4C">
+      <input class="kbutton" type="button" value="5C">
+      <input class="kbutton" type="button" value="6C">
+      <input class="kbutton" type="button" value="7C">
+    </div>
+    <div class="col_kitchens">
+      <input class="kbutton" type="button" value="1D">
+      <input class="kbutton" type="button" value="2D">
+      <input class="kbutton" type="button" value="3D">
+      <input class="kbutton" type="button" value="4D">
+      <input class="kbutton" type="button" value="5D">
+      <input class="kbutton" type="button" value="6D">
+      <input class="kbutton" type="button" value="7D">
     </div>
   </div>
-
-  <div class="row">
-    <div class="col-sm-1">
-      <input type="button" value="1A" class="kbutton btn btn-outline-secondary btn-lg btn-block">
-      <input type="button" value="2A" class="kbutton btn btn-outline-secondary btn-lg btn-block">
-      <input type="button" value="3A" class="kbutton btn btn-outline-secondary btn-lg btn-block">
-      <input type="button" value="4A" class="kbutton btn btn-outline-secondary btn-lg btn-block">
-      <input type="button" value="5A" class="kbutton btn btn-outline-secondary btn-lg btn-block">
-      <input type="button" value="6A" class="kbutton btn btn-outline-secondary btn-lg btn-block">
-      <input type="button" value="7A" class="kbutton btn btn-outline-secondary btn-lg btn-block">
-    </div>
-    <div class="col-sm-1">
-      <input type="button" value="1B" class="kbutton btn btn-outline-secondary btn-lg btn-block">
-      <input type="button" value="2B" class="kbutton btn btn-outline-secondary btn-lg btn-block">
-      <input type="button" value="3B" class="kbutton btn btn-outline-secondary btn-lg btn-block">
-      <input type="button" value="4B" class="kbutton btn btn-outline-secondary btn-lg btn-block">
-      <input type="button" value="5B" class="kbutton btn btn-outline-secondary btn-lg btn-block">
-      <input type="button" value="6B" class="kbutton btn btn-outline-secondary btn-lg btn-block">
-      <input type="button" value="7B" class="kbutton btn btn-outline-secondary btn-lg btn-block">
-    </div>
-    <div class="col-sm-1">
-      <input type="button" value="1C" class="kbutton btn btn-outline-secondary btn-lg btn-block">
-      <input type="button" value="2C" class="kbutton btn btn-outline-secondary btn-lg btn-block">
-      <input type="button" value="3C" class="kbutton btn btn-outline-secondary btn-lg btn-block">
-      <input type="button" value="4C" class="kbutton btn btn-outline-secondary btn-lg btn-block">
-      <input type="button" value="5C" class="kbutton btn btn-outline-secondary btn-lg btn-block">
-      <input type="button" value="6C" class="kbutton btn btn-outline-secondary btn-lg btn-block">
-      <input type="button" value="7C" class="kbutton btn btn-outline-secondary btn-lg btn-block">
-    </div>
-    <div class="col-sm-1">
-      <input type="button" value="1D" class="kbutton btn btn-outline-secondary btn-lg btn-block">
-      <input type="button" value="2D" class="kbutton btn btn-outline-secondary btn-lg btn-block">
-      <input type="button" value="3D" class="kbutton btn btn-outline-secondary btn-lg btn-block">
-      <input type="button" value="4D" class="kbutton btn btn-outline-secondary btn-lg btn-block">
-      <input type="button" value="5D" class="kbutton btn btn-outline-secondary btn-lg btn-block">
-      <input type="button" value="6D" class="kbutton btn btn-outline-secondary btn-lg btn-block">
-      <input type="button" value="7D" class="kbutton btn btn-outline-secondary btn-lg btn-block">
-    </div>
-  </div>
-  <div class="row top-buffer">
-    <div class="col-sm-2">
+  <div class="champcontainer">
       <input type="button" value="Aspiranter" class="kbutton btn btn-outline-secondary btn-lg btn-block">
-    </div>
-    <div class="col-sm-1">
       <input type="button" value="Crew" class="kbutton btn btn-outline-secondary btn-lg btn-block">
-    </div>
-    <div class="col-sm-2">
       <input type="button" value="Marbarudvalget" class="kbutton btn btn-outline-secondary btn-lg btn-block">
-    </div>
   </div>
 </div>
 </form>
