@@ -6,19 +6,24 @@
 <script src="/static/odometer/odometer.js"></script>
 <style>
 /* default styling */
+:root{
+  --fs: calc(min(3vi,3vb));
+  --spacing: 4pt;
+}
+body { margin: var(--spacing); }
 .banner {
-  margin-bottom:12pt;
   width:800px;
   max-width:70vh;
 }
+h1{font-size:var(--fs);margin:0;}
 #countdown {
 {% if object.date_start > now %}
   font-size: 4pc;
 {% else %}
-  font-size: 14pt;
+  font-size: var(--fs);
 {% endif %}
 }
-.odometer { font-size: 18pt; }
+.odometer { font-size: calc(var(--fs) * 0.6); }
 .points { text-align: center; }
 .carousel-inner > .item > img,
 .carousel-inner > .item > a > img { width: 70%; margin: auto; }
@@ -39,22 +44,25 @@
 .container {
   display:flex;
   flex-direction:row;
+  gap: var(--spacing);
 }
 .col {
   display:flex;
   flex-grow:1;
   flex-direction:column;
   height: calc(100vh - 1pc);
+  gap: var(--spacing);
 }
 .mid {
   display:flex;
   flex-grow:4;
   flex-direction:column;
   height: calc(100vh - 1pc);
+  gap: var(--spacing);
 }
 .champs {
   display:flex;
-  flex-grow:1/7;
+  flex:0.7;
   flex-direction:row;
   justify-content: center;
 }
@@ -62,23 +70,26 @@
   display:flex;
   flex:1;
   flex-direction:column;
-  justify-content: center;
+  justify-content: end;
 }
+
 .mid > .row:first-child {
   display: flex;
-  flex:5.9;
+  flex:4;
   justify-content: center;
 }
 .mid > .row > .banner {
   align-self: flex-start;
 }
-.mid > .row:nth-child(2) {
+.mid > .row:nth-child(2) { /* Elfsight and other stuff */
   display: flex;
-  flex:0.1;
+  flex:2;
   justify-content: center;
 }
-.mid > .champs {
-  flex:1;
+.mid > .row:nth-child(3) { /* Timer */
+  display: flex;
+  flex:0.3;
+  justify-content: center;
 }
 </style>
 <style>
@@ -236,8 +247,6 @@ Go see the list of old marbars at <a href="{% url 'index' %}">index</a>
       {% endif %}
     </div>
 
-    <div class="row"><div id="countdown" class="text-center">(Insert countdown)</div></div>
-
     <div class="row">
       <div class="col-sm-6 container top-buffer" id="graphSlider"></div>
       {% if object.elfsight_apikey %}
@@ -245,6 +254,8 @@ Go see the list of old marbars at <a href="{% url 'index' %}">index</a>
       {% else %}
       {% endif %}
     </div>
+
+    <div class="row"><div id="countdown" class="text-center">(Insert countdown)</div></div>
 
     <div class="champs">
       <div class="kitchen"><h1>Aspiranter</h1><div id="Aspiranter" class="odometer">0</div></div>
