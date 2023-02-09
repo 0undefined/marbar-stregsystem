@@ -8,7 +8,7 @@ ENV REDIS_HOST=redis
 ENV REDIS_PORT=6379
 
 RUN apk update
-RUN apk add build-base python3 python3-dev py3-pip bash py3-mysqlclient
+RUN apk add build-base sqlite python3 python3-dev py3-pip bash py3-mysqlclient
 RUN pip3 install -q --no-cache-dir    \
     Pillow                            \
     channels==3.0.5                   \
