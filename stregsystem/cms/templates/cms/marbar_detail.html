@@ -4,6 +4,13 @@
 {% block head %}
 <link rel="stylesheet" href="/static/odometer/themes/odometer-theme-car.css" />
 <script src="/static/odometer/odometer.js"></script>
+{% if object.date_start > now %}
+{# has started #}
+<link rel="stylesheet" href="/static/css/started.css" />
+{% else %}
+{# countdown #}
+<link rel="stylesheet" href="/static/css/countdown.css" />
+{% endif %}
 <style>
 /* default styling */
 :root{
