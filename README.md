@@ -40,6 +40,7 @@ _er `pull` strengt talt nødvendigt?_
 
 # TODO
 
+* Gør `media` (altså, bannere /user-uploads) persistent, ligesom databasen.
 * Gør det muligt at tilføje/fjerne consumers fra marbare.
   _således bliver det muligt at bruge systemet til andre ting end marbar, ved at
   kunne fjerne "Aspiranter", "Crew" osv. og tilføje andre ting._
