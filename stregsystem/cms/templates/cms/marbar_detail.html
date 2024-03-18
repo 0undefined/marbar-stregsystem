@@ -7,7 +7,7 @@
 {% if object.date_start > now %}
 {# countdown #}
 <link rel="stylesheet" href="/static/css/countdown.css" />
-{% if object.date_end > now %}
+{% elif object.date_end > now %}
 {# has started #}
 <link rel="stylesheet" href="/static/css/started.css" />
 {% else %}
