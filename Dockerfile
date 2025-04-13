@@ -13,14 +13,22 @@ RUN pip3 install -q --no-cache-dir    \
     Pillow                            \
     channels==3.0.5                   \
     channels-redis==3.4.1             \
+    setuptools==58.2.0\
     django                            \
     django-bootstrap-form             \
     ipython                           \
     mysqlclient                       \
+    django-csp\
+    gunicorn\
+    hiredis\
     tzdata
 
+COPY ./gunicon.py /usr/share/gunicorn-conf.py
 ADD ./stregsystem/ /usr/share/www/
 WORKDIR /usr/share/www
+
+RUN mkdir -p /usr/share/www/static
+
 
 COPY ./runserver.sh /usr/bin
 RUN [ "chmod", "+x", "/usr/bin/runserver.sh" ]

@@ -16,7 +16,9 @@ services:
     depends_on:
       - redis
     ports:
-      - 8000:8000
+      - 0.0.0.0:8000:8000
     volumes:
       - ./stregsystem:/usr/share/www
-    command: python3 manage.py runserver 0.0.0.0:8000
+        #command: python3 manage.py runserver 0.0.0.0:8000
+    command: gunicorn -c /usr/share/gunicorn-conf.py
+

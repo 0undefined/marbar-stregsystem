@@ -15,8 +15,15 @@ SECRET_KEY = 'django-insecure-oj8bf8u330!3j@5f0vn(k(9v&(3z00*)*u2plj7&hds-syv*ue
 DEBUG = os.getenv('VIRTUAL_ENV', None) is not None or os.getenv('DEBUG', "false").lower() == "true"
 
 #ALLOWED_HOSTS = [] if DEBUG else ['*']
-ALLOWED_HOSTS = ['*']
+DEFAULT_DOMAIN = 'marbar.kussehul.dk'
+ALLOWED_HOSTS = [DEFAULT_DOMAIN, '127.0.0.1', '0.0.0.0']
 
+
+CSRF_TRUSTED_ORIGINS = [
+            'http://' + DEFAULT_DOMAIN, 'https://' + DEFAULT_DOMAIN,
+    'http://www.' + DEFAULT_DOMAIN, 'https://www.' + DEFAULT_DOMAIN,
+
+        ]
 
 # Application definition
 
