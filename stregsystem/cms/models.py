@@ -3,6 +3,7 @@ from datetime import timedelta
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 
 def get_active_marbar():
@@ -57,6 +58,14 @@ class Marbar(models.Model):
 # stregsystem.settings.DEFAULT_CONSUMERS
 class MarbarConsumer(models.Model):
     name = models.CharField(max_length=64, unique=True, blank=False)
+
+
+# New "streger" model, wip
+class MarbarScore(models.Model):
+    marbar   = models.ForeignKey(Marbar,         on_delete=models.CASCADE)
+    consumer = models.ForeignKey(MarbarConsumer, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
 # aka. Streger

@@ -9,7 +9,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-from .models import Marbar, MarbarConsumer, MarbarCounter, get_active_marbar
+from .models import Marbar, MarbarConsumer, get_active_marbar
 from .forms import MarbarForm
 
 # Create your views here.

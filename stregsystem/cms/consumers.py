@@ -1,7 +1,8 @@
 import json
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
-from .models import Marbar, MarbarConsumer, MarbarCounter, get_active_marbar
+from django.contrib.auth.models import User
+from .models import Marbar, MarbarConsumer, MarbarScore, get_active_marbar
 
 class stregsystem_consumer(WebsocketConsumer):
     def connect(self):
@@ -16,10 +17,10 @@ class stregsystem_consumer(WebsocketConsumer):
         self.accept()
 
         marbar = Marbar.objects.get(id=self.marbar)
-        counters = MarbarCounter.objects.filter(marbar=marbar).values('consumer__name','counter')
+        counters = Marbar.objects.get(marbar=marbar).annotate(score=Count('marbarscore__consumer')).values('marbarscore__consumer__name','score')
         self.send(text_data=json.dumps({
             'type': 'update_all',
-            'streger': list({'consumer': kv['consumer__name'], 'count': kv['counter']} for kv in counters)
+            'streger': list({'consumer': kv['marbarscore__consumer__name'], 'count': kv['score']} for kv in counters)
         }))
 
     def disconnect(self, exit_code):
@@ -43,10 +44,12 @@ class stregsystem_consumer(WebsocketConsumer):
                 self.send(text_data=json.dumps({'type': 'response', 'message': "404: Consumer (kitchen) not found"}))
                 return
 
+            user = self.scope["user"]
             # TODO: Fix hardcoding id later, like the previous TODO
-            counter = MarbarCounter.objects.get_or_create(marbar=Marbar.objects.get(id=self.marbar), consumer=consumer[0])
-            counter[0].counter += genstande
-            counter[0].save()
+            MarbarScore(marbar=Marbar.objects.get(id=self.marbar), consumer=consumer[0], created_by=user).save()
+            #counter = MarbarCounter.objects.get_or_create(marbar=Marbar.objects.get(id=self.marbar), consumer=consumer[0])
+            #counter[0].counter += genstande
+            #counter[0].save()
 
             async_to_sync(self.channel_layer.group_send)(
                 self.room_group_name,

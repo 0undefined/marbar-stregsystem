@@ -3,6 +3,25 @@ services:
     image: redis:5
     ports:
       - 6379:6379
+  daphne:
+    build: .
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10k"
+        max-file: "1"
+    environment:
+      #- PYTHONUNBUFFERED=1
+      - DEBUG=True
+    depends_on:
+      - redis
+    ports:
+      - 0.0.0.0:8001:8001
+    volumes:
+      - ./stregsystem:/usr/share/www
+        #command: python3 manage.py runserver 0.0.0.0:8000
+    command: daphne -b 0.0.0.0 -p 8001 stregsystem.asgi:channel_layer
+
   stregsystem:
     build: .
     logging:
