@@ -12,12 +12,14 @@ RUN apk update
 RUN apk add build-base sqlite python3 python3-dev py3-pip bash py3-mysqlclient
 RUN pip3 install --break-system-packages -q --no-cache-dir    \
     Pillow                            \
-    channels-redis==4.2.1             \
+    channels-redis                    \
     channels["daphne"]                \
-    django==4.2                            \
+    django                            \
     django-csp                        \
+    psycopg[binary]                   \
     gunicorn                          \
     ipython                           \
+    hiredis                           \
     tzdata
 
 

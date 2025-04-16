@@ -27,7 +27,7 @@ ALLOWED_HOSTS = [] if DEBUG else [DEFAULT_DOMAIN, '127.0.0.1', '0.0.0.0']
 # Application definition
 
 INSTALLED_APPS = [
-    'daphne',
+    #'daphne',
     # Django built-ins
     'django.contrib.admin',
     'django.contrib.auth',
@@ -38,10 +38,10 @@ INSTALLED_APPS = [
 
     # Extra packages
     #'bootstrapform', # Nice forms and other styling stuffs
-    #'channels', # For async websocket IO
+    'channels', # For async websocket IO
     #'asgiref',
     #'asgi_redis',
-    #'channels_redis',
+    'channels_redis',
 
     # Custom apps
     'cms.apps.CmsConfig',
@@ -101,15 +101,19 @@ DATABASES = {}
 
 if os.getenv('DB_TYPE', None) is None:
     DATABASES['default'] = {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'stregsystem',
+        'USER': os.getenv('DB_USER', 'marbar'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
     }
 else:
     DATABASES['default'] = {
-        'ENGINE': 'django.db.backends.' + os.getenv('DB_TYPE', 'sqlite3'),
+        'ENGINE': 'django.db.backends.' + os.getenv('DB_TYPE', 'postgresql'),
         'NAME': 'stregsystem',
         'USER': os.getenv('DB_USER', 'marbar'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
         'HOST': os.getenv('DB_HOST'),
         'PORT': os.getenv('DB_PORT'),
     }

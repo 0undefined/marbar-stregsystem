@@ -1,26 +1,33 @@
 services:
+  postgres:
+    image: postgres:17.4
+    environment:
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB=stregsystem
+      - POSTGRES_USER=marbar
+    volumes:
+      - marbar_db:/var/lib/postgresql/data
   redis:
     image: redis:5
-    ports:
-      - 6379:6379
-  daphne:
-    build: .
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10k"
-        max-file: "1"
-    environment:
-      #- PYTHONUNBUFFERED=1
-      - DEBUG=True
-    depends_on:
-      - redis
-    ports:
-      - 0.0.0.0:8001:8001
-    volumes:
-      - ./stregsystem:/usr/share/www
-        #command: python3 manage.py runserver 0.0.0.0:8000
-    command: daphne -b 0.0.0.0 -p 8001 stregsystem.asgi:channel_layer
+  #daphne:
+  #  build: .
+  #  logging:
+  #    driver: "json-file"
+  #    options:
+  #      max-size: "10k"
+  #      max-file: "1"
+  #  environment:
+  #    #- PYTHONUNBUFFERED=1
+  #    - DEBUG=True
+  #    - REDIS_HOST=localhost
+  #  depends_on:
+  #    - redis
+  #  ports:
+  #    - 0.0.0.0:8001:8001
+  #  volumes:
+  #    - ./stregsystem:/usr/share/www
+  #      #command: python3 manage.py runserver 0.0.0.0:8000
+  #  command: daphne -b 0.0.0.0 -p 8001 stregsystem.asgi:channel_layer
 
   stregsystem:
     build: .
@@ -32,12 +39,18 @@ services:
     environment:
       #- PYTHONUNBUFFERED=1
       - DEBUG=True
+      - POSTGRES_PASSWORD
+      - DB_HOST=postgres
     depends_on:
       - redis
+      - postgres
     ports:
       - 0.0.0.0:8000:8000
     volumes:
       - ./stregsystem:/usr/share/www
-        #command: python3 manage.py runserver 0.0.0.0:8000
+    #command: runserver.sh
+    #command: python3 manage.py runserver 0.0.0.0:8000
     command: gunicorn -c /usr/share/gunicorn-conf.py
 
+volumes:
+  marbar_db:

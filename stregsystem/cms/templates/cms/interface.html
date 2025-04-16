@@ -64,6 +64,8 @@ input{margin:3pt;padding:1pc;font-size:2vi;font-weight:600;border-radius:0.5vi;b
 }
 </style>
 <script>
+
+const info_url = window.location.protocol + '//' + window.location.host + '/api/marbar/{{ marbar.id }}';
 const update_url = '/update/{{ marbar.id }}'; {# TODO fix this bs later using `url` #}
 
 const update_socket = new WebSocket('ws://' + window.location.host + update_url);
@@ -112,7 +114,26 @@ window.addEventListener("load", (event) => {
 
 			const consumer = e.target.value;
 			const message = JSON.stringify({køkken: consumer, streger: streger});
-			update_socket.send(message);
+      const response = fetch(info_url, {
+        method:"POST",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": "{{ csrf_token }}",
+        },
+        body:message,
+      });
+      if (!response.ok) {
+        Notify(response.body);
+        return;
+      } else {
+        const data = response.json();
+        if (data.status == "error") {
+          Notify(data.message);
+        }
+          Notify(data.message);
+      }
+			//update_socket.send(message);
 		});
 	}
 })

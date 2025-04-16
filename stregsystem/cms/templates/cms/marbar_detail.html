@@ -166,7 +166,8 @@ const update_url = "/update/{{ object.id }}"; /* TODO fix this bs later */
 /* Ideally we want to use `url 'endpoint'` or something like this
  * instead of hardcoding 'update' in there */
 
-const update_socket = new WebSocket('ws://' + window.location.host + update_url);
+//const update_socket = new WebSocket('ws://' + window.location.host + update_url);
+const info_url = window.location.protocol + '//' + window.location.host + '/api/marbar/{{ object.id }}';
 
 function odometerNumberParser(e) {
 	var numbers = e.getElementsByClassName("odometer-value");
@@ -181,27 +182,47 @@ function odometerNumberParser(e) {
 function updateLocalCounter(consumer, streger) {
 	var elem = document.getElementById(consumer);
 	var count = odometerNumberParser(elem);
-	if (isNaN(count)) { /* we fucked up somewhere, TODO: refresh */ }
+	if (isNaN(streger)) {
+    location.reload();
+  }
 
-	elem.textContent = count + streger;
+	elem.textContent = streger;
 }
 
-update_socket.onmessage = function(e) {
-	const message = JSON.parse(e.data);
+async function update_consumers() {
+  const response = await fetch(info_url, {method:"GET"});
+  if (!response.ok) {
+    console.error(`Failed to get info: ${response.status}`);
+    return;
+  }
 
-	if (message.type === "update") {
-		/* Update a single counter */
-		updateLocalCounter(message.consumer, message.count);
+  const d = await response.json();
+  for (const [consumer, value] of Object.entries(d)) {
+    console.log(consumer);
+    console.log(value);
+    updateLocalCounter(consumer, value);
+  }
+}
 
-	} else if (message.type === "update_all") {
-		for (var i = 0; i < message.streger.length; i++) {
-			updateLocalCounter(message.streger[i].consumer, message.streger[i].count);
-		}
-		/* TODO: update all parts */;
-	} else if (message.type === "refresh") {
-		location.reload();
-	}
-};
+//update_socket.onmessage = function(e) {
+//	const message = JSON.parse(e.data);
+//
+//	if (message.type === "update") {
+//		/* Update a single counter */
+//		updateLocalCounter(message.consumer, message.count);
+//
+//	} else if (message.type === "update_all") {
+//		for (var i = 0; i < message.streger.length; i++) {
+//			updateLocalCounter(message.streger[i].consumer, message.streger[i].count);
+//		}
+//		/* TODO: update all parts */;
+//	} else if (message.type === "refresh") {
+//		location.reload();
+//	}
+//};
+window.addEventListener('load', function () {
+  update_consumers();
+})
 
 {% endif %}
 </script>
