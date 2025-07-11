@@ -48,9 +48,11 @@ services:
       - 0.0.0.0:8000:8000
     volumes:
       - ./stregsystem:/usr/share/www
+      - /usr/share/www/static:/usr/share/www/public
+      - /usr/share/www/media:/usr/share/www/media
     #command: runserver.sh
-    #command: python3 manage.py runserver 0.0.0.0:8000
-    command: gunicorn -c /usr/share/gunicorn-conf.py
+    command: python3 manage.py runserver 0.0.0.0:8000
+    #command: gunicorn -c /usr/share/gunicorn-conf.py
 
 volumes:
   marbar_db:

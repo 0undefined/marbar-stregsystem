@@ -20,9 +20,11 @@ if not DEBUG:
         'http://' + DEFAULT_DOMAIN, 'https://' + DEFAULT_DOMAIN,
         'http://www.' + DEFAULT_DOMAIN, 'https://www.' + DEFAULT_DOMAIN,
     ]
-ALLOWED_HOSTS = [] if DEBUG else [DEFAULT_DOMAIN, '127.0.0.1', '0.0.0.0']
+ALLOWED_HOSTS = ['*'] if DEBUG else [DEFAULT_DOMAIN, '127.0.0.1', '0.0.0.0']
 
 
+LOGIN_REDIRECT_URL = 'index'
+LOGOUT_REDIRECT_URL = 'index'
 
 # Application definition
 

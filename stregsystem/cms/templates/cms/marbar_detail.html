@@ -1,7 +1,48 @@
-{% extends "base.html" %}
-
-{% block title %}{{ object.title }}{% endblock %}
-{% block head %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>{{ object.title }}</title>
+    <meta charset="utf-8">
+    <meta Http-Equiv="Cache-Control" Content="no-cache">
+    <meta Http-Equiv="Pragma" Content="no-cache">
+    <meta Http-Equiv="Pragma-directive: no-cache">
+    <meta Http-Equiv="Cache-directive: no-cache">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta Http-Equiv="Expires" Content="0">
+    {# Remember to include default css #}
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        background-color:black;
+        color:white;
+        display: flex;
+        flex-direction: column;
+        gap: 1pc;
+      }
+      input {
+        background-color: #446;
+        border: solid 2pt #669;
+        border-radius: 2pt;
+        color:#fff;
+        padding:2pt;
+      }
+      /*
+      a, a:link, a:visited {color:blue; text-decoration:none; transition:color 1s;}
+      a:hover, a:active {color:cyan; text-decoration:none; transition:color 1s;}
+      */
+      body {color:white; background-color:black;}
+      input[type="button"],
+      input[type="submit"],
+      input[type="text"]
+      {
+        padding: 3pt;
+        min-width: 1pc;
+        min-height: 1pc;
+      }
+</style>
 <link rel="stylesheet" href="/static/odometer/themes/odometer-theme-car.css" />
 <script src="/static/odometer/odometer.js"></script>
 {% if object.date_start > now %}
@@ -49,57 +90,6 @@ h1{font-size:var(--fs);margin:0;}
 .carousel-fade .carousel-inner .prev.right { opacity: 1; }
 .carousel-fade .carousel-control { z-index: 2; }
 .top-buffer { margin-top: 0px; }
-
-.container {
-  display:flex;
-  flex-direction:row;
-  gap: var(--spacing);
-}
-.col {
-  display:flex;
-  flex-grow:1;
-  flex-direction:column;
-  height: calc(100vh - 1pc);
-  gap: var(--spacing);
-}
-.mid {
-  display:flex;
-  flex-grow:4;
-  flex-direction:column;
-  height: calc(100vh - 1pc);
-  gap: var(--spacing);
-}
-.champs {
-  display:flex;
-  flex:0.7;
-  flex-direction:row;
-  justify-content: center;
-}
-.kitchen {
-  display:flex;
-  flex:1;
-  flex-direction:column;
-  justify-content: end;
-}
-
-.mid > .row:first-child {
-  display: flex;
-  flex:4;
-  justify-content: center;
-}
-.mid > .row > .banner {
-  align-self: flex-start;
-}
-.mid > .row:nth-child(2) { /* Elfsight and other stuff */
-  display: flex;
-  flex:2;
-  justify-content: center;
-}
-.mid > .row:nth-child(3) { /* Timer */
-  display: flex;
-  flex:0.3;
-  justify-content: center;
-}
 </style>
 <style>
 /* custom styling */
@@ -219,16 +209,15 @@ window.addEventListener('load', loop)
 {% endif %}
 </script>
 {% endif %}
-{% endblock %}
-
-{% block content %}
+  </head>
+  <body>
 {% if object is None %}{# Check if there are any active marbars #}
 No current marbars!
 Go see the list of old marbars at <a href="{% url 'index' %}">index</a>
 
 {% else %}{# Actual page #}
 {% if object.date_start > now %}
-<div class="container w-100 h-100">
+<div class="container">
   <h1 class="text-center align-middle" style="margin-top:20vh">Marbar starter om</h1>
   <div id="countdown" class="text-center"> (Insert countdown) </div>
   <h3 class="text-center">{{ object.title }}</h3>
@@ -269,14 +258,6 @@ Go see the list of old marbars at <a href="{% url 'index' %}">index</a>
       {% endif %}
     </div>
 
-    <div class="row">
-      <div class="col-sm-6 container top-buffer" id="graphSlider"></div>
-      {% if object.elfsight_apikey %}
-      <div class="elfsight-app-{{ object.elfsight_apikey }}"></div>
-      {% else %}
-      {% endif %}
-    </div>
-
     <div class="row"><div id="countdown" class="text-center">(Insert countdown)</div></div>
 
     <div class="champs">
@@ -308,4 +289,5 @@ Go see the list of old marbars at <a href="{% url 'index' %}">index</a>
 </div>
 {% endif %}
 {% endif %}
-{% endblock %}
+  </body>
+</html>

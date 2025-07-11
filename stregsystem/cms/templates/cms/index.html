@@ -1,23 +1,133 @@
-{% extends "base.html" %}
+{% extends "nav.html" %}
 
 {% block title %}Index{% endblock %}
 
-{% block content %}
-<a href="{% url 'new' %}">Ny</a>
+{% block extra_head %}
+<style>
+a.new {
+  text-decoration: none;
+  background-color:#696;
+  border: solid 2pt #363;
+  border-radius: 2pt;
+  color:#fff;
+  padding:2pt;
+}
+div.marbar-list,
+div.marbar-info {
+  display: flex;
+  flex-direction: column;
+  gap:6pt;
+}
+div.marbar-list {
+  gap:2pc;
+}
+div.marbar-info {
+  border: solid 1pt #333;
+  border-radius: 2pt;
+  background-color: #222;
+  padding: 6pt;
+}
+div.marbar-info > span.duration {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap:1pc;
+}
+div.marbar-info > span.duration span {
+}
+div.marbar-info > span {
+  display: flex;
+  flex-direction: row;
+  gap: 6pt;
+}
+div.marbar-info > span > a.active-marbar {
+  background-color: #446;
+  border: solid 2pt #669;
+  text-decoration: none;
+  border-radius: 2pt;
+  color:#fff;
+  padding:2pt;
+  font-size: 18pt;
+
+  flex-grow:2;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+div.marbar-info > span > a.edit {
+  background-color: #664;
+  border: solid 2pt #669;
+  text-decoration: none;
+  border-radius: 2pt;
+  color:#fff;
+  padding:2pt;
+  align-content:center;
+}
+main {
+  min-width: 600px;
+}
+h1 {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+h1 a {
+  font-size: 12pt;
+}
+</style>
+{% endblock %}
+{% block extra_content %}
+<h1><span>All marbars</span><a class="new" href="{% url 'new' %}">New</a></h1>
+This is a list of all marbars on the system, previous, current, and
+upcoming.
 <br>
 {% if active|length > 0 %}
-Aktiv marbar:
-<a href="{{ active.0.get_absolute_url }}">{{ active.0.title }}</a>&nbsp;&nbsp;&nbsp;{{ active.0.date_start|date }} ( {{active.0.duration_h}} hours)
+<h2>Active marbar</h2>
+<div class="marbar-info">
+  <span class="duration">
+    <span>Start date: {{ active.0.date_start|date }}</span>
+    <span>Duration: {{active.0.duration_h}}h</span>
+  </span>
+  <span>
+  <a class="active-marbar" href="{{ active.0.get_absolute_url }}">
+    <span>{{ active.0.title }}</span>
+    <span>></span>
+  </a>
+  {% if user.is_authenticated %}
+  <a class="edit" href="{% url 'edit' active.0.id %}">edit</a>
+  {% endif %}
+  </span>
+</div>
 {% endif %}
 {% if object_list|length == 0 %}
 <div>
 No marbars!
 </div>
 {% else %}
-<ul>
+
+<h2>Complete list</h2>
+<div class="marbar-list">
 {% for bar in object_list %}
-<li>[<a href="{% url 'edit' bar.id %}">edit</a>] <a href="{{ bar.get_absolute_url }}">{{ bar.title }}</a>&nbsp;&nbsp;&nbsp;{{ bar.date_start|date }} ( {{bar.duration_h}} hours)</li>
+
+<div class="marbar-info">
+  <span class="duration">
+    <span>Start date: {{ bar.date_start|date }}</span>
+    <span>Duration: {{ bar.duration_h }}h</span>
+  </span>
+  <span>
+  <a class="active-marbar" href="{{ bar.get_absolute_url }}">
+    <span>{{ bar.title }}</span>
+    <span>></span>
+  </a>
+  {% if user.is_authenticated %}
+  <a class="edit" href="{% url 'edit' bar.id %}">edit</a>
+  {% endif %}
+  </span>
+</div>
+
 {% endfor %}
-</ul>
+</div>
 {% endif %}
 {% endblock %}

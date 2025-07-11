@@ -35,5 +35,5 @@ RUN [ "chmod", "+x", "/usr/bin/runserver.sh" ]
 
 EXPOSE 8000:8000
 
-CMD [ "/usr/bin/env", "sh", "./runserver.sh" ]
+#CMD [ "/usr/bin/env", "sh", "./runserver.sh" ]
 #ENTRYPOINT [ "runserver.sh" ]

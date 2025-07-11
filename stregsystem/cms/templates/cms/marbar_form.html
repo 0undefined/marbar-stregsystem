@@ -1,13 +1,64 @@
-{% extends "base.html" %}
+{% extends "nav.html" %}
 
 {% block title %}Lav Marbar{% endblock %}
 
-{% block content %}
+{% block extra_head %}
+<style>
+main {
+  min-width: 600pt;
+}
+form.marbar-new {
+  display: flex;
+  flex-direction: column;
+  gap: 1pc;
+}
+form.marbar-new > div {
+  display: flex;
+  flex-direction: row;
+  gap: 6pt;
+}
+
+form.marbar-new > div.participant label,
+form.marbar-new > div > input {
+  flex-grow: 2;
+}
+
+form.marbar-new > div.participant {
+  border-bottom: solid 1pt #333;
+}
+
+form.marbar-new > div.participant > span.participant-toggle {
+  display: flex;
+  flex-direction: row;
+  gap: 1pc;
+}
+</style>
+{% endblock %}
+{% block extra_content %}
 <div class="container">
 <h1>Ny marbar</h1>
-<form method="post" enctype="multipart/form-data">
+<form class="marbar-new" method="post" enctype="multipart/form-data">
   {% csrf_token %}
   {{ form }}
+  {% for user in kitchens %}
+  <div class="participant">
+    <label for="kitchen-{{ user.username }}">{{ user.username }}</label>
+    <span class="participant-toggle">
+      <span>
+        <input type="radio" name="kitchen-{{user.username}}" id="kitchen-{{user.username}}-disabled" value="Disabled"{% if user.role == roles.DISABLED.value %} checked{% endif %}>
+        <label for="kitchen-{{user.username}}-disabled">Disabled</label>
+      </span>
+      <span>
+        <input type="radio" name="kitchen-{{user.username}}" id="kitchen-{{user.username}}-main" value="Main"{% if user.role == roles.MAIN.value %} checked{% endif %}>
+        <label for="kitchen-{{user.username}}-main">Main</label>
+      </span>
+      <span>
+        <input type="radio" name="kitchen-{{user.username}}" id="kitchen-{{user.username}}-secondary" value="Secondary"{% if user.role == roles.SECONDARY.value %} checked{% endif %}>
+        <label for="kitchen-{{user.username}}-secondary">Secondary</label>
+      </span>
+    </span>
+  </div>
+  {% endfor %}
   <input type="submit" value="Skål!">
 </form>
 </div>

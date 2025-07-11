@@ -53,6 +53,36 @@ class Marbar(models.Model):
         ordering = ['-date_start']
 
 
+class MarbarParticipant(models.Model):
+    # The role determines where they are put on the scoreboard
+    class Role(models.IntegerChoices):
+        DISABLED = 0, "Disabled"
+        SECONDARY = 1, "Secondary"
+        MAIN = 2, "Main"
+
+    role   = models.IntegerField(choices=Role.choices, default=Role.DISABLED)
+    marbar = models.ForeignKey(Marbar, on_delete=models.CASCADE, related_name='participants')
+    user   = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    @staticmethod
+    def default_participation(marbar, user):
+        from stregsystem.settings import DEFAULT_CONSUMERS
+
+        participation = MarbarParticipant.objects.filter(marbar=marbar, user=user)
+        if len(participation) == 1:
+            return participation[0].role
+
+        username = user.username
+
+        if username in ('Aspiranter', 'Crew', 'Marbarudvalget'):
+            return MarbarParticipant.Role.MAIN.value
+        elif username in DEFAULT_CONSUMERS:
+            return MarbarParticipant.Role.SECONDARY.value
+        else:
+            return MarbarParticipant.Role.DISABLED.value
+
+
+
 # Køkkener/aspiranter/crew etc.
 # Bliver automatisk lavet når systemet starter i ./apps.py ud fra listen
 # stregsystem.settings.DEFAULT_CONSUMERS

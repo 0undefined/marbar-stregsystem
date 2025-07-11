@@ -12,7 +12,15 @@
     <meta Http-Equiv="Expires" Content="0">
     {# Remember to include default css #}
     <style>
-      body {color:white; background-color:black;}
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        padding: 0;
+        margin: 0;
+        color: white;
+        background-color: black;
+      }
       input[type="button"],
       input[type="submit"],
       input[type="text"]
@@ -21,10 +29,6 @@
         min-width: 1pc;
         min-height: 1pc;
       }
-      /*
-      a, a:link, a:visited {color:blue; text-decoration:none; transition:color 1s;}
-      a:hover, a:active {color:cyan; text-decoration:none; transition:color 1s;}
-      */
     </style>
     {% block head %}{% endblock %}
   </head>

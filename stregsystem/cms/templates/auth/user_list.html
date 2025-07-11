@@ -1,18 +1,77 @@
-<!DOCTYPE html>
-<html>
-<head>
-</head>
-<body>
+{% extends "nav.html" %}
+
+{% block title %}Index{% endblock %}
+
+{% block extra_head %}
+<style>
+input[value="Deactivate"] {
+  background-color:#966;
+  border-color:#633;
+}
+input[value="Activate"],
+input[value="Create"] {
+  background-color:#696;
+  border-color:#363;
+}
+
+.create-kitchen,
+.userlist {
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+}
+.userlist div:nth-child(odd) {
+  background-color: #333;
+}
+.create-kitchen div,
+.userlist div {
+  padding: 2pt;
+  display: flex;
+  gap: 1pc;
+  flex-direction: row;
+}
+.create-kitchen div input:nth-child(1),
+.userlist div span.username {
+  flex-grow:2;
+}
+</style>
+{% endblock %}
+{% block extra_content %}
   <!--
     We want to make consumers into users, passwordless or a special kind of
     user.
     We also want to allow marbar users & admins to be able to administer whos in
     each marbar, and reuse the marbar system for special stuff.
   -->
-  <ul>
-  {% for user in object_list %}{% if not user.is_superuser %}
-  <li>{{ user }}</li>
-  {% endif %}{% endfor %}
-  </ul>
+  <h1>Users</h1>
+  <p>
+  An (almost) complete list of the users on the Marbar system.<br>
+  Each kitchen on the scoreboard is in reality a user on the system. You are
+  required to log in as a user on /interface (not a kitchen) in order to add drinks/score to
+  a kitchen on the scoreboard.
+  </p>
+  <form name="userlist-form" action="#" method="POST" class="userlist">{% csrf_token %}
+  {% for u in object_list %}
+  <div><span class="username">{{ u.username }}</span>{% if u.username in kitchengroup %} <span class="role">kitchen</span>{% endif %}
+    {% if user.is_authenticated %}
+    {% if u.is_active %}
+    <input type="submit" value="Deactivate" name="{{ u.id }}">
+    {% else %}
+    <input type="submit" value="Activate" name="{{ u.id }}">
+    {% endif %}
+    {% endif %}
+  </div>
+  {% endfor %}
+  </form>
+  {% if user.is_authenticated %}
+  <form name="create-kitchen-user" action="#" method="POST" class="create-kitchen">{% csrf_token %}
+    <label for="kitchen_name">Create kitchen user</label><br>
+    <div>
+    <input name="kitchen_name" type="text" placeholder="Kitchen name">
+    <input type="submit" value="Create">
+    </div>
+  </form>
+  {% endif %}
 </body>
 </html>
+{% endblock %}
