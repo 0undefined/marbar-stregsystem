@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+  <!--
+    We want to make consumers into users, passwordless or a special kind of
+    user.
+    We also want to allow marbar users & admins to be able to administer whos in
+    each marbar, and reuse the marbar system for special stuff.
+  -->
+  <ul>
+  {% for user in object_list %}{% if not user.is_superuser %}
+  <li>{{ user }}</li>
+  {% endif %}{% endfor %}
+  </ul>
+</body>
+</html>

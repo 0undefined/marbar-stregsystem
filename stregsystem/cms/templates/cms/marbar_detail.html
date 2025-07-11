@@ -166,7 +166,6 @@ const update_url = "/update/{{ object.id }}"; /* TODO fix this bs later */
 /* Ideally we want to use `url 'endpoint'` or something like this
  * instead of hardcoding 'update' in there */
 
-//const update_socket = new WebSocket('ws://' + window.location.host + update_url);
 const info_url = window.location.protocol + '//' + window.location.host + '/api/marbar/{{ object.id }}';
 
 function odometerNumberParser(e) {
@@ -204,25 +203,18 @@ async function update_consumers() {
   }
 }
 
-//update_socket.onmessage = function(e) {
-//	const message = JSON.parse(e.data);
-//
-//	if (message.type === "update") {
-//		/* Update a single counter */
-//		updateLocalCounter(message.consumer, message.count);
-//
-//	} else if (message.type === "update_all") {
-//		for (var i = 0; i < message.streger.length; i++) {
-//			updateLocalCounter(message.streger[i].consumer, message.streger[i].count);
-//		}
-//		/* TODO: update all parts */;
-//	} else if (message.type === "refresh") {
-//		location.reload();
-//	}
-//};
-window.addEventListener('load', function () {
-  update_consumers();
-})
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function loop(e) {
+  while(true) {
+    update_consumers();
+    await sleep(10000);
+  }
+}
+
+window.addEventListener('load', loop)
 
 {% endif %}
 </script>

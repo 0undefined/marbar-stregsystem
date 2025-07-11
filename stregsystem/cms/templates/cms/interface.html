@@ -68,8 +68,6 @@ input{margin:3pt;padding:1pc;font-size:2vi;font-weight:600;border-radius:0.5vi;b
 const info_url = window.location.protocol + '//' + window.location.host + '/api/marbar/{{ marbar.id }}';
 const update_url = '/update/{{ marbar.id }}'; {# TODO fix this bs later using `url` #}
 
-const update_socket = new WebSocket('ws://' + window.location.host + update_url);
-
 function Notify(msg) {
 	const status_response = document.getElementById('status_response');
 
@@ -81,29 +79,7 @@ function Notify(msg) {
 	}, 850);
 }
 
-update_socket.onmessage = function(e) {
-	const response = JSON.parse(e.data);
-	console.log(response);
-	if (response.type !== "response") { return; }
-
-	Notify(response.message);
-
-	if (response.message === "ok") {
-		status_response.textContent += " (" + response.beers + ")";
-		/* clear the input */
-
-		const count = document.getElementById('streger');
-		count.value = "";
-	}
-};
-
-/* Add button handling */
-window.addEventListener("load", (event) => {
-	const kbtns = document.getElementsByClassName('kbutton');
-	console.log("Adding button click events");
-
-	for (var i = 0; i < kbtns.length; i++) {
-		kbtns[i].addEventListener('click', (e) => {
+async function handleButton(e) {
 			const streger = document.getElementById('streger').value;
 
 			/* Check if they're trolling us */
@@ -114,7 +90,7 @@ window.addEventListener("load", (event) => {
 
 			const consumer = e.target.value;
 			const message = JSON.stringify({køkken: consumer, streger: streger});
-      const response = fetch(info_url, {
+      const response = await fetch(info_url, {
         method:"POST",
         credentials: "same-origin",
         headers: {
@@ -128,12 +104,57 @@ window.addEventListener("load", (event) => {
         return;
       } else {
         const data = response.json();
-        if (data.status == "error") {
-          Notify(data.message);
+        if (data.status !== undefined) {
+          status_response.textContent += " (" + response.beers + ")";
+          /* clear the input */
+
+          const count = document.getElementById('streger');
+          count.value = "";
         }
           Notify(data.message);
       }
-			//update_socket.send(message);
+}
+
+/* Add button handling */
+window.addEventListener("load", (event) => {
+	const kbtns = document.getElementsByClassName('kbutton');
+	console.log("Adding button click events");
+
+	for (var i = 0; i < kbtns.length; i++) {
+		kbtns[i].addEventListener('click', async (e) => {
+			const streger = document.getElementById('streger').value;
+
+			/* Check if they're trolling us */
+			if (isNaN(parseInt(streger))) {
+				Notify("Forkert mængde streger");
+				return;
+			}
+
+			const consumer = e.target.value;
+			const message = JSON.stringify({køkken: consumer, streger: streger});
+      const response = await fetch(info_url, {
+        method:"POST",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": "{{ csrf_token }}",
+        },
+        body:message,
+      });
+      if (!response.ok) {
+        Notify(response.body);
+        return;
+      } else {
+        const data = await response.json();
+        if (data.status === undefined) {
+          status_response.textContent += " (" + response.beers + ")";
+          /* clear the input */
+
+          const count = document.getElementById('streger');
+          count.value = "";
+        }
+        Notify(data.message);
+      }
 		});
 	}
 })
